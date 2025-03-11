@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="connect-src 'self' http://localhost:8080 http://localhost:* https://*;">
+    <title>ASU Exam Scheduler</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="assets/logo.svg" alt="ASU Logo" id="logo-img">
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active" data-page="home"><i class="fas fa-home"></i><span>Home</span></a></li>
+                <li><a href="#" data-page="search"><i class="fas fa-search"></i><span>Search</span></a></li>
+                <li><a href="#" data-page="calendar"><i class="fas fa-calendar"></i><span>Calendar</span></a></li>
+                <li><a href="#" data-page="historical"><i class="fas fa-history"></i><span>Historical</span></a></li>
+                <li><a href="#" data-page="studyplan"><i class="fas fa-brain"></i><span>AI Study Plan</span></a></li>
+                <li><a href="#" data-page="aifeatures"><i class="fas fa-robot"></i><span>AI Features</span></a></li>
+                <li><a href="#" data-page="contact"><i class="fas fa-envelope"></i><span>Contact</span></a></li>
+            </ul>
+        </nav>
+
+        <main class="content">
+            <!-- Home Page -->
+            <section id="home" class="page active">
+                <div class="text-zone">
+                    <h1 class="animated-text">Welcome To</h1>
+                    <h1 class="animated-text"> ASU Exam Scheduler!</h1>
+                    <h2>Add your exams to your calendar with ease! <br> 
+                       Just search, click add, and export...</h2>
+                    <button class="main-button" id="getStartedBtn">GET STARTED</button>
+                </div>
+                <div class="image-container">
+                    <img src="assets/studying.svg" alt="Student Studying" class="studying-img">
+                </div>
+            </section>
+
+            <!-- Search Page -->
+            <section id="search" class="page">
+                <div class="text-zone">
+                    <h1>Search For Exams</h1>
+                    <div class="search-box">
+                        <input type="text" id="exam-search" placeholder="Enter course code (e.g., COMP)">
+                        <button id="search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <div id="search-results">
+                        <p>Search for a course to see available exams</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar Page -->
+            <section id="calendar" class="page">
+                <div class="text-zone">
+                    <h1>Your Exam Calendar</h1>
+                    <div id="calendar-container">
+                        <div id="selected-exams">
+                            <h2>Selected Exams</h2>
+                            <div id="exam-list"></div>
+                        </div>
+                        <div class="calendar-actions">
+                            <button id="export-calendar" class="main-button">Export Calendar</button>
+                            <button id="clear-calendar" class="secondary-button">Clear Calendar</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Historical Page -->
+            <section id="historical" class="page">
+                <div class="text-zone">
+                    <h1>Historical Exam Data</h1>
+                    <div class="search-options">
+                        <div class="search-box">
+                            <input type="text" id="historical-search" placeholder="Enter course code">
+                            <button id="historical-search-button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="year-options">
+                            <label><input type="checkbox" value="w2024"> W2024</label>
+                            <label><input type="checkbox" value="f2023"> F2023</label>
+                            <label><input type="checkbox" value="w2023"> W2023</label>
+                            <label><input type="checkbox" value="f2022"> F2022</label>
+                        </div>
+                    </div>
+                    <div id="historical-results">
+                        <p>Search for a course and select years to see historical exam data</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Study Plan -->
+            <section id="studyplan" class="page">
+                <div class="text-zone">
+                    <h1><i class="fas fa-brain"></i> AI Study Plan Generator</h1>
+                    <p>Create a personalized exam preparation schedule optimized for your learning style.</p>
+                    
+                    <div class="backend-status">
+                        <p id="connection-status">Checking backend connection...</p>
+                        <button onclick="testDirectFetch()" class="main-button" style="margin-top: 10px;">Test Direct API Connection</button>
+                    </div>
+
+                    <div class="preferences-section">
+                        <h3>Study Preferences</h3>
+                        <div class="preferences-grid">
+                            <div class="preference-item">
+                                <label for="studySessionLength">Preferred session length:</label>
+                                <select id="studySessionLength">
+                                    <option value="30">30 minutes</option>
+                                    <option value="60" selected>60 minutes</option>
+                                    <option value="90">90 minutes</option>
+                                    <option value="120">120 minutes</option>
+                                </select>
+                            </div>
+                            <div class="preference-item">
+                                <label for="preferredTimeOfDay">Preferred time of day:</label>
+                                <select id="preferredTimeOfDay">
+                                    <option value="morning">Morning (6am-12pm)</option>
+                                    <option value="afternoon">Afternoon (12pm-5pm)</option>
+                                    <option value="evening" selected>Evening (5pm-10pm)</option>
+                                    <option value="night">Night (10pm-6am)</option>
+                                </select>
+                            </div>
+                            <div class="preference-item">
+                                <label for="learningStyle">Learning style:</label>
+                                <select id="learningStyle">
+                                    <option value="visual" selected>Visual (diagrams, videos, charts)</option>
+                                    <option value="auditory">Auditory (lectures, discussions)</option>
+                                    <option value="reading">Reading/writing</option>
+                                    <option value="kinesthetic">Kinesthetic (hands-on)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="generate-plan-btn" class="main-button">Generate Study Plan</button>
+                    </div>
+                    <div id="study-plan-results"></div>
+                </div>
+            </section>
+
+            <!-- AI Features Page -->
+            <section id="aifeatures" class="page">
+                <div class="text-zone">
+                    <h1><i class="fas fa-robot"></i> Advanced AI Features</h1>
+                    <p>Explore our cutting-edge AI features designed to enhance your educational experience and exam preparation.</p>
+                    
+                    <div class="ai-features-container">
+                        <!-- Core Intelligent Systems -->
+                        <div class="ai-feature-section">
+                            <h2>Core Intelligent Systems</h2>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                                <div class="feature-content">
+                                    <h3>Personalized Study Plan Generator</h3>
+                                    <p>Uses Amazon Personalize and LLMs to analyze your course load, past performance, and learning preferences to create adaptive study schedules optimized for your specific exams.</p>
+                                    <button class="main-button" onclick="navigateToPage('studyplan')">Try It Now</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
+                                <div class="feature-content">
+                                    <h3>Smart Conflict Resolution Engine</h3>
+                                    <p>Our AI system recommends optimal solutions for exam conflicts by analyzing your degree requirements, course availability, and graduation timeline.</p>
+                                    <button class="secondary-button feature-coming-soon">Coming Soon</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-hourglass-half"></i></div>
+                                <div class="feature-content">
+                                    <h3>Exam Difficulty Predictor & Time Allocator</h3>
+                                    <p>Machine learning model trained on historic exam data, student feedback, and course materials to predict exam difficulty and suggest precise preparation time distributions across topics.</p>
+                                    <button class="main-button" onclick="navigateToPage('difficulty-predictor')">Try It Now</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Learning Experience -->
+                        <div class="ai-feature-section">
+                            <h2>Enhanced Learning Experience</h2>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
+                                <div class="feature-content">
+                                    <h3>AI-Powered Study Companion</h3>
+                                    <p>Leveraging Amazon Bedrock (Claude or Anthropic models) to create a personalized AI tutor with memory of your strengths/weaknesses across multiple study sessions.</p>
+                                    <button class="main-button" onclick="navigateToPage('study-companion')">Try It Now</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-book"></i></div>
+                                <div class="feature-content">
+                                    <h3>Multimodal Learning Resources Generator</h3>
+                                    <p>AI system that automatically compiles and generates study guides, practice questions, and visual aids tailored to course content and exam format.</p>
+                                    <button class="secondary-button feature-coming-soon">Coming Soon</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-project-diagram"></i></div>
+                                <div class="feature-content">
+                                    <h3>Knowledge Graph Navigation</h3>
+                                    <p>Interactive visualization of course concepts showing prerequisites and connections between topics to help you identify knowledge gaps.</p>
+                                    <button class="main-button" onclick="navigateToPage('knowledge-graph')">Try It Now</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Social & Administrative Intelligence -->
+                        <div class="ai-feature-section">
+                            <h2>Social & Administrative Intelligence</h2>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-users"></i></div>
+                                <div class="feature-content">
+                                    <h3>Collaborative Study Matching</h3>
+                                    <p>Advanced NLP system that analyzes learning styles, schedules, and complementary knowledge to form optimal study groups with communication facilitation.</p>
+                                    <button class="secondary-button feature-coming-soon">Coming Soon</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="feature-content">
+                                    <h3>Exam Performance Analytics</h3>
+                                    <p>Predictive analytics dashboard for students to track progress and for administrators to identify at-risk students needing intervention.</p>
+                                    <button class="secondary-button feature-coming-soon">Coming Soon</button>
+                                </div>
+                            </div>
+                            
+                            <div class="feature-card">
+                                <div class="feature-icon"><i class="fas fa-balance-scale"></i></div>
+                                <div class="feature-content">
+                                    <h3>Cognitive Load Balancer</h3>
+                                    <p>AI tool that analyzes your schedule, course workload, and exam difficulty to suggest term schedule adjustments for optimal academic performance.</p>
+                                    <button class="secondary-button feature-coming-soon">Coming Soon</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Difficulty Predictor Page -->
+            <section id="difficulty-predictor" class="page">
+                <div class="text-zone">
+                    <h1><i class="fas fa-hourglass-half"></i> Exam Difficulty Predictor</h1>
+                    <p>Our AI model analyzes historical exam data, student feedback, and course content to predict exam difficulty and help you allocate your study time effectively.</p>
+                    
+                    <div class="exam-difficulty-container">
+                        <div class="difficulty-search">
+                            <h3>Search for a course to predict difficulty</h3>
+                            <div class="search-box">
+                                <input type="text" id="difficulty-search-input" placeholder="Enter course code (e.g., COMP 204)">
+                                <button id="difficulty-search-button" onclick="predictDifficulty()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="difficulty-results">
+                            <p>Search for a course to see difficulty prediction</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Knowledge Graph Page -->
+            <section id="knowledge-graph" class="page">
+                <div class="text-zone">
+                    <h1><i class="fas fa-project-diagram"></i> Knowledge Graph Navigation</h1>
+                    <p>Interactive visualization of course concepts showing prerequisites and connections between topics to help you identify knowledge gaps.</p>
+                    
+                    <div class="knowledge-graph-container">
+                        <div class="graph-controls">
+                            <h3>Select a course to explore</h3>
+                            <div class="search-box">
+                                <input type="text" id="graph-search-input" placeholder="Enter course code (e.g., COMP 204)">
+                                <button id="graph-search-button" onclick="loadKnowledgeGraph()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="graph-visualization">
+                            <p>Search for a course to view its knowledge graph</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Study Companion Page -->
+            <section id="study-companion" class="page">
+                <div class="text-zone">
+                    <h1><i class="fas fa-graduation-cap"></i> AI Study Companion</h1>
+                    <p>Your personalized AI tutor powered by Amazon Bedrock (Claude), designed to adapt to your learning style and remember your progress across sessions.</p>
+                    
+                    <div class="study-companion-container">
+                        <div class="companion-sidebar">
+                            <h3>Your Courses</h3>
+                            <div id="companion-courses">
+                                <p>Add exams to your calendar to see them here</p>
+                            </div>
+                            
+                            <h3>Topics</h3>
+                            <div id="companion-topics">
+                                <ul class="topic-list" id="topics-list"></ul>
+                            </div>
+                        </div>
+                        
+                        <div class="companion-chat">
+                            <div id="chat-messages">
+                                <div class="ai-message">
+                                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                                    <div class="message-content">
+                                        <p>Hello! I'm your AI Study Companion. I can help you prepare for your exams, answer questions about course topics, or quiz you on key concepts. How can I help today?</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chat-input">
+                                <input type="text" id="user-message" placeholder="Ask me anything about your courses...">
+                                <button id="send-message" onclick="sendMessage()">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Contact Page -->
+            <section id="contact" class="page">
+                <div class="text-zone">
+                    <h1>Contact Me</h1>
+                    <div class="contact-container">
+                        <div class="contact-info">
+                            <p>Thank you for your interest in getting in touch!</p>
+                            <p>I value open communication and welcome any inquiries, feedback, or collaboration opportunities. Please don't hesitate to contact me by filling out the form, especially if you find any errors!</p>
+                            <div class="social-links">
+                                <a href="https://www.linkedin.com/in/erik-cupsa/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                                <a href="mailto:ErikCupsa@gmail.com"><i class="fas fa-envelope"></i></a>
+                                <a href="https://github.com/Erik-Cupsa" target="_blank"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                        <div class="contact-form">
+                            <form id="contact-form">
+                                <div class="form-row">
+                                    <input type="text" name="name" placeholder="Name" required>
+                                    <input type="email" name="email" placeholder="Email" required>
+                                </div>
+                                <input type="text" name="subject" placeholder="Subject" required>
+                                <textarea name="message" placeholder="Message" required></textarea>
+                                <button type="submit" class="main-button">SEND</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Application Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
