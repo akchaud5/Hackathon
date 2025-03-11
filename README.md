@@ -1,51 +1,107 @@
-# McGill Exam Scheduler
+# ASU Exam Scheduler with AI Features
 
-This project is a comprehensive exam scheduler designed for McGill University, benefiting over 30,000 students. It utilizes a PostgreSQL database to store all exam-related information, a Spring Boot application to create a RESTful API for the backend, and a ReactJS frontend for intuitive user interaction.
+A comprehensive exam scheduling and study planning application designed for ASU. This application helps students search for exams, create personal calendars, explore historical exam data, and leverage AI features to optimize their study approach.
 
-## Visit The Site
+## Overview
 
-Feel free to check out the [project here!](https://mcgillscheduler.vercel.app/)
+The ASU Exam Scheduler is built with a two-tier architecture:
 
-<img width="1301" alt="Screenshot 2024-02-09 at 4 19 56 PM" src="https://github.com/Erik-Cupsa/McGill-Scheduler/assets/86483911/3d1bdbe8-8df7-4275-99b5-81bd564aed23">
+1. **Spring Boot Backend:** RESTful API for exam data management and AI model integration
+2. **Simplified Frontend:** Responsive and accessible interface built with HTML, CSS, and JavaScript
 
-## Features
+<!-- Note: The screenshot will be available after you upload the project to GitHub -->
+<!-- For now, we'll use a text description -->
+[Screenshot of ASU Exam Scheduler with AI features dashboard]
 
-- **PostgreSQL Database:** Stores detailed information about exams, including dates, times, courses, locations, and more.
-- **Spring Boot Backend:** Provides a robust RESTful API to manage exam data efficiently. The backend is packaged as a Dockerfile and hosted on Heroku.
-- **ReactJS Frontend:** A user-friendly interface for viewing, adding, editing, and deleting exam information. The frontend is hosted on Vercel.
+## Advanced AI Features
 
-## Prerequisites
+The application includes several cutting-edge AI features designed to enhance the educational experience:
 
-Before running this project locally, ensure you have the following installed:
+### 1. Personalized Study Plan Generator
+- Creates adaptive study schedules based on your selected exams
+- Customizes plans based on learning preferences, available time, and exam proximity
+- Generates week-by-week schedules with topic-specific recommendations
 
-- Java Development Kit (JDK) 8 or higher
-- Node.js and npm (Node Package Manager)
-- PostgreSQL database
-- IDE (IntelliJ IDEA, Eclipse, VS Code, etc.)
+### 2. Exam Difficulty Predictor & Time Allocator
+- Analyzes historical exam data to predict difficulty levels
+- Provides detailed study time recommendations for specific topics
+- Offers visual difficulty indicators and comparative metrics
 
-## Installation
+### 3. Knowledge Graph Navigation
+- Visualizes course relationships, prerequisites, and dependencies
+- Helps identify knowledge gaps and critical learning paths
+- Interactive interface for exploring course connections
+
+### 4. AI Study Companion
+- Personalized AI tutor powered by Claude/Anthropic models
+- Provides customized study advice based on your courses
+- Offers detailed guidance on study techniques, stress management, and exam preparation
+
+## Simplified Frontend
+
+A lightweight alternative frontend implementation is available in the `/simplified` directory. This version:
+
+- Uses vanilla HTML, CSS, and JavaScript (no framework dependencies)
+- Includes all the original features of the React application
+- Provides fallback mock data for demonstration when the backend is unavailable
+- Features improved debugging tools and error handling
+
+## Getting Started
+
+### Running the Simplified Frontend
+
+1. Navigate to the simplified directory:
+```bash
+cd "Frontend (ReactJS)/simplified"
+```
+
+2. Serve with any simple HTTP server:
+```bash
+# Using Python
+python -m http.server 3000
+
+# OR using npx serve
+npx serve
+```
+
+3. Access in your browser at http://localhost:3000 or the port specified by your server
 
 ### Backend Setup
 
-1. Clone this repository.
-2. Open the `backend` directory in your preferred IDE.
-3. Configure the `application.properties` file in the `src/main/resources` directory with your PostgreSQL database credentials.
-4. Run the Spring Boot application.
+1. Navigate to the Spring Boot project:
+```bash
+cd "Backend (SpringBoot)/exam-scheduler"
+```
 
-### Frontend Setup
+2. Run the Spring Boot application:
+```bash
+mvn spring-boot:run
+```
 
-1. Navigate to the `frontend` directory in your terminal.
-2. Run `npm install` to install the necessary dependencies.
-3. Update the `src/config.js` file with the appropriate backend API URL.
-4. Run `npm start` to start the ReactJS application.
+3. The backend API will be available at http://localhost:8080
 
-## Usage
+## API Endpoints
 
-- Access the frontend application via `http://localhost:3000`.
-- Use the provided API endpoints to perform CRUD operations on exam data:
-  - `/api/exams` - GET all exams, POST a new exam, DELETE all exams.
-  - `/api/exams/{examId}` - GET, PUT, or DELETE a specific exam by ID.
+- `/api/v1/exam` - Search and manage current exams
+- `/api/v1/historic-exams/historic` - Access historical exam data
+- `/api/v1/ai/study-plan` - Generate AI-powered study plans
+
+## Development Notes
+
+- The simplified frontend includes fallback mock data when the backend is unavailable
+- CORS settings in the backend allow connections from various origins
+- The application structure follows a modular design for easy extension
+
+## Technologies Used
+
+- **Backend:** Spring Boot, Java, JPA/Hibernate, H2/PostgreSQL
+- **Frontend:** HTML, CSS, JavaScript 
+- **AI Integration:** Amazon Bedrock-ready, Claude model integration capability
 
 ## Contributing
 
 Contributions are welcome! If you'd like to enhance this project or report issues, please submit a pull request or open an issue.
+
+## License
+
+This project is licensed under the MIT License.
