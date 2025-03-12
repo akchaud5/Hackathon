@@ -1,0 +1,283 @@
+.navBar { 
+    background: transparent; 
+    width: 100%; 
+    height: 130px; 
+    position: fixed; 
+    top: 0; 
+    z-index: 3;  
+    display: flex; 
+    align-items: center;
+}
+
+.logo {
+    padding: 40px 40px; 
+}
+
+.logoImg { 
+    display: block; 
+    margin: 3px auto; 
+    margin-left: 15px;
+    width: 60px; 
+    height: auto;
+}
+
+.subLogo { 
+    width: 150px; 
+    margin-left: -14px;
+}
+
+.nav { 
+    display: flex; 
+    align-items: center;
+    justify-content: space-evenly; 
+    padding-left: 0;
+    flex-grow: 1;
+}
+
+.navLink { 
+    font-size: 25px; 
+    color: #f0f0f083;
+    display: block; 
+    margin: 0 80px; 
+    position: relative; 
+    text-decoration: none; 
+}
+
+.navLink i { 
+    transition: all 0.3s ease-out; 
+}
+
+.navLink:hover { 
+    color: #fff;
+}
+
+.navLink:hover svg { 
+    opacity: 0; 
+}
+
+.navLink:hover::after { 
+    opacity: 1; 
+}
+
+.navLink::after { 
+    content: ""; 
+    font-size: 20px; 
+    letter-spacing: 2px; 
+    position: absolute; 
+    bottom: 0; 
+    display: block; 
+    text-align: center; 
+    opacity: 0; 
+    transition: all 0.3s ease-out;
+}
+
+.homeLink::after { 
+    content: 'HOME'; 
+    margin-left: -12px;
+}
+
+.searchLink::after { 
+    content: "SEARCH";
+    margin-left: -20px;
+}
+
+.calendarLink::after { 
+    content: "CALENDAR"; 
+    margin-left: -28px;
+}
+
+.historyLink::after { 
+    content: "HISTORY"; 
+    margin-left: -28px;
+}
+
+.aiLink::after {
+    content: "STUDY PLAN";
+    margin-left: -30px;
+}
+
+.balanceLink::after {
+    content: "LOAD BALANCER";
+    margin-left: -40px;
+}
+
+.conflictLink::after {
+    content: "CONFLICTS";
+    margin-left: -28px;
+}
+
+.resourcesLink::after {
+    content: "RESOURCES";
+    margin-left: -30px;
+}
+
+.companionLink::after {
+    content: "AI COMPANION";
+    margin-left: -40px;
+}
+
+.analyticsLink {
+    color: #2196F3;
+}
+
+.analyticsLink::after {
+    content: "EXAM ANALYTICS";
+    margin-left: -40px;
+    background-color: #2196F3;
+}
+
+.notificationLink {
+    color: #ff8c00;
+    animation: bell-pulse 2s infinite;
+    position: relative;
+}
+
+@keyframes bell-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.notificationLink::after {
+    content: "NOTIFICATIONS";
+    margin-left: -40px;
+    background-color: #ff8c00;
+}
+
+.contactLink::after {
+    content: "CONTACT";
+    margin-left: -25px;
+}
+
+.active svg {
+    color: #fff; 
+}
+
+.buttonLink {
+    border: none;
+    color: #fff;
+    background-image: linear-gradient(30deg, #ff4000, #fd9815);
+    border-radius: 10px;
+    background-size: 100% auto;
+    font-family: inherit;
+    font-size: 15px;
+    padding: 0.6em 1.5em;
+    white-space: nowrap;
+}
+
+.buttonLink:hover {
+    background-position: right center;
+    background-size: 200% auto;
+    animation: pulse512 1.5s infinite;
+}
+
+@keyframes pulse512 {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.6);
+    }
+    
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 165, 0, 0%);
+    }
+    
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 165, 0, 0%);
+    }
+}
+
+.icon {
+    width: 50px;
+    margin: 30px;
+    opacity: 0.8;
+    color: #ff4000; 
+}
+
+.icon:hover { 
+    opacity: 1;
+}
+
+.hamburgerIcon, 
+.closeIcon { 
+    display: none;
+}
+
+@media screen and (max-width: 1150px) {
+    .navBar {
+        position: initial; 
+        height: 100px; 
+    }
+    
+    .logo img { 
+        width: 50px; 
+    }
+    
+    .subLogo { 
+        width: 100px; 
+        margin-left: -7px;
+    }
+
+    .nav {
+        display: none;
+        width: 100%; 
+        height: 100%;
+        background: #1a0408;
+        top: 0; 
+        left: 0; 
+        position: fixed; 
+        z-index: 2; 
+        margin: 0;
+    }
+
+    .navLink { 
+        display: flex;
+        padding-left: 33%; 
+        margin: 30px;
+    }
+
+    .navLink::after {
+        opacity: 1;
+        position: initial;
+        width: auto;
+        padding-left: 50px;
+    }
+
+    .navLink svg {
+        opacity: 1 !important;
+    }
+
+    .mobileShow { 
+        display: block;
+    }
+    
+    .buttonLink {
+        margin-top: 150px;
+        margin-left: 40%;
+        width: 100px;
+    }
+    
+    .hamburgerIcon, 
+    .closeIcon {
+        display: block;
+        position: absolute; 
+        top: 15px; 
+        right: 15px;
+        color: #f76d3f; 
+    }
+}
+  
+@media screen and (max-width: 500px) {
+    .nav a { 
+        padding-left: 22%; 
+        margin: 30px;
+    }
+    
+    .nav .buttonLink {
+        margin-left: 32%;
+    }
+}

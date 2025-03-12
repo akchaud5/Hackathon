@@ -1,0 +1,55 @@
+.notification-page {
+  .text-zone {
+    position: absolute; 
+    align-content: center;
+    left: 10%; 
+    margin-top: 270px; 
+    transform: translateY(-50%); 
+    max-height: 90%; 
+    display: absolute;
+    max-width: 80%;
+  }
+  
+  overflow: auto;
+  h1 {
+    color: #fff; 
+    font-size: 53px; 
+    margin: 0; 
+    font-weight: 400; 
+    cursor: pointer;
+    
+    &::before { 
+      color: #ffd700; 
+      font-size: 18px; 
+      position: absolute; 
+      margin-top: -40px; 
+      left: 15px; 
+      opacity: 0.6; 
+    }
+    
+    &::after { 
+      color: #ffd700; 
+      font-size: 18px; 
+      position: absolute; 
+      margin-top: 18px; 
+      left: 20px; 
+      animation: fadeIn 0.7s backwards; 
+      opacity: 0.6; 
+    }
+  }
+  
+  h2 { 
+    color: #fff;
+    animation: fadeIn 0.8s backwards; 
+    font-weight: 400;
+  }
+}
+
+@media screen and (max-width: 1150px) {
+  .notification-page {
+    .text-zone {
+      margin-top: 150px;
+      width: 80%;
+    }
+  }
+}

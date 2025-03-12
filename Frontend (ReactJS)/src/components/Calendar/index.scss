@@ -131,6 +131,27 @@ button {
   .google:hover {
     transform: scale(1.02);
   }
+  
+.notification-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  border-radius: 50%;
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  
+  &:hover {
+    background-color: #6b0000;
+    transform: scale(1.1);
+  }
+}
    .shadow {
     position: absolute;
     top: 0;
@@ -306,4 +327,18 @@ button {
       margin-left: 50px;
     }
   }
+}
+
+.notification-settings-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-in-out;
 }

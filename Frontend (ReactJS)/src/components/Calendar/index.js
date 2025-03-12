@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import "./index.scss";
 import AnimatedLetters from '../AnimatedLetters';
+import NotificationSettings from '../NotificationSettings';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+import notificationService from '../../services/NotificationService';
 
 const Calendar = () => {
   const [selectedExams, setSelectedExams] = useState([]);
   const [letterClass, setLetterClass] = useState("text-animate");
+  const [selectedExamForNotification, setSelectedExamForNotification] = useState(null);
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
   const isMobileView = window.innerWidth <= 1150;
 
   useEffect(() => {
@@ -14,11 +20,14 @@ const Calendar = () => {
     const timer = setTimeout(() => {
         setLetterClass("text-animate-hover");
       }, 1);
+      
+    // Initialize notification service
+    notificationService.initializeNotifications();
   
-      return () => {
-        clearTimeout(timer);
-      };
-    }, []);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
 
   const handleRemoveExam = (examKey) => {
     const updatedExams = selectedExams.filter((exam) => exam.examKey !== examKey);
@@ -26,37 +35,128 @@ const Calendar = () => {
     sessionStorage.setItem('calendar', JSON.stringify(updatedExams));
   };
 
+  // Format dates for iCalendar export (in the format YYYYMMDDTHHmmss)
   const formatDateTime = (dateTime) => {
-    const inputDate = new Date(dateTime);
+    try {
+      // If we have just a time string without a date
+      if (dateTime && !dateTime.includes('T') && !dateTime.includes('-')) {
+        // Create a full datetime by adding today's date
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        
+        // Format: YYYY-MM-DDThh:mm:ss
+        dateTime = `${year}-${month}-${day}T${dateTime}`;
+      }
+      
+      const inputDate = new Date(dateTime);
+      
+      // Check if date is valid
+      if (isNaN(inputDate.getTime())) {
+        console.error('Invalid date format:', dateTime);
+        // Return a default date (current date/time + 1 day) if invalid
+        const defaultDate = new Date();
+        defaultDate.setDate(defaultDate.getDate() + 1);
+        return defaultDate.toISOString().replace(/[-:]/g, '').slice(0, -5);
+      }
+      
+      // Format for iCalendar: YYYYMMDDTHHmmssZ
+      return inputDate.toISOString().replace(/[-:]/g, '').slice(0, -5);
+    } catch (error) {
+      console.error('Error formatting date:', error, dateTime);
+      // Return a default date (current date/time + 1 day) if error
+      const defaultDate = new Date();
+      defaultDate.setDate(defaultDate.getDate() + 1);
+      return defaultDate.toISOString().replace(/[-:]/g, '').slice(0, -5);
+    }
+  };
   
-    const estOffset = -4 * 60;
-    const estTime = new Date(inputDate.getTime() + estOffset * 60 * 1000);
-  
-    const formattedDateTime = estTime.toISOString().replace(/[-:]/g, '').slice(0, -5);
-  
-    return formattedDateTime;
+  // Format dates for display in the UI (in a user-friendly format)
+  const formatDisplayDateTime = (dateTime) => {
+    try {
+      // If it's already just a time string, return it as is
+      if (dateTime && !dateTime.includes('T') && !dateTime.includes('-')) {
+        return dateTime;
+      }
+      
+      const date = new Date(dateTime);
+      
+      // Check if date is valid
+      if (isNaN(date.getTime())) {
+        console.error('Invalid date format for display:', dateTime);
+        return dateTime; // Return the original if invalid
+      }
+      
+      // Format date for display: "YYYY-MM-DD HH:MM AM/PM"
+      const options = { 
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      };
+      
+      return date.toLocaleString('en-US', options);
+    } catch (error) {
+      console.error('Error formatting display date:', error, dateTime);
+      return dateTime; // Return the original if error
+    }
   };
 
   const handleExportCalendar = () => {
     try {
+      // Check if we have exams to export
+      if (selectedExams.length === 0) {
+        alert("No exams to export. Please add exams to your calendar first.");
+        return;
+      }
+      
+      // Generate a unique ID for each event
+      const generateUID = () => {
+        return 'asu-exam-' + Math.random().toString(36).substring(2, 11);
+      };
+      
       const calendarContent = [
         'BEGIN:VCALENDAR',
         'VERSION:2.0',
+        'PRODID:-//ASU Exam Scheduler//EN',
         'CALSCALE:GREGORIAN',
+        'METHOD:PUBLISH',
         ...selectedExams.map((exam) => {
-          const uniqueId = `${exam.course}-${exam.section}-${exam.exam_start_time.replace(/\s/g, '_')}`;
+          const uid = generateUID();
+          const location = exam.building && exam.room 
+            ? `${exam.building} ${exam.room}` 
+            : (exam.building || exam.room || 'TBA');
+            
+          const description = [
+            exam.course_title ? `Course: ${exam.course_title}` : '',
+            `Type: ${exam.exam_type || 'Exam'}`,
+            exam.building ? `Building: ${exam.building}` : '',
+            exam.room ? `Room: ${exam.room}` : '',
+            exam.rows ? `Rows: ${exam.rows}` : '',
+            exam.rowStart ? `Row Start: ${exam.rowStart}` : '',
+            exam.rowEnd ? `Row End: ${exam.rowEnd}` : '',
+            '\nGenerated by ASU Exam Scheduler'
+          ].filter(Boolean).join('\\n');
+          
+          const now = new Date().toISOString().replace(/[-:]/g, '').slice(0, -5);
+          
           return [
             'BEGIN:VEVENT',
-            `SUMMARY:${exam.course} - ${exam.exam_type}`,
-            `DESCRIPTION:Building: ${exam.building}\\nRoom: ${exam.room}\\nRows: ${exam.rows}\\nRow Start: ${exam.rowStart}\\nRow End: ${exam.rowEnd}`,
+            `UID:${uid}`,
+            `DTSTAMP:${now}`,
+            `SUMMARY:${exam.course} ${exam.exam_type || 'Exam'}`,
+            `DESCRIPTION:${description}`,
             `DTSTART:${formatDateTime(exam.exam_start_time)}`,
             `DTEND:${formatDateTime(exam.exam_end_time)}`,
-            'LOCATION:Event Location',
+            `LOCATION:${location}`,
             'STATUS:CONFIRMED',
             'SEQUENCE:0',
             'BEGIN:VALARM',
-            'TRIGGER:-PT15M',
-            'DESCRIPTION:Reminder',
+            'TRIGGER:-PT30M',
+            'DESCRIPTION:Exam Reminder',
             'ACTION:DISPLAY',
             'END:VALARM',
             'END:VEVENT',
@@ -65,16 +165,20 @@ const Calendar = () => {
         'END:VCALENDAR',
       ].join('\n');
 
+      // Log the content for debugging
+      console.log('iCal content:', calendarContent);
+
       const calendarDataURI = `data:text/calendar;charset=utf-8,${encodeURIComponent(calendarContent)}`;
 
       const link = document.createElement('a');
       link.href = calendarDataURI;
-      link.download = 'exam_calendar.ics';
+      link.download = 'asu_exam_calendar.ics';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (error) {
       console.error('Error exporting calendar:', error);
+      alert("There was an error exporting your calendar. Please try again.");
     }
   };
   const handleExportGoogleCalendar = (exam) => {
@@ -83,19 +187,40 @@ const Calendar = () => {
   
       const startTime = formatDateTime(exam.exam_start_time);
       const endTime = formatDateTime(exam.exam_end_time);
+      
+      // Build a more detailed description
+      const description = [
+        exam.course_title ? `Course: ${exam.course_title}` : '',
+        `Type: ${exam.exam_type || 'Exam'}`,
+        exam.building ? `Building: ${exam.building}` : '',
+        exam.room ? `Room: ${exam.room}` : '',
+        exam.rows ? `Rows: ${exam.rows}` : '',
+        exam.rowStart ? `Row Start: ${exam.rowStart}` : '',
+        exam.rowEnd ? `Row End: ${exam.rowEnd}` : '',
+        '\nGenerated by ASU Exam Scheduler'
+      ].filter(Boolean).join('\n');
+      
+      // Set proper location
+      const location = exam.building && exam.room 
+        ? `${exam.building} ${exam.room}` 
+        : (exam.building || exam.room || 'TBA');
   
       const calendarContent = [
-        `text=${encodeURIComponent(`${exam.course} - ${exam.exam_type}`)}`,
+        `text=${encodeURIComponent(`${exam.course} ${exam.exam_type || 'Exam'}`)}`,
         `dates=${startTime}/${endTime}`,
-        `details=${encodeURIComponent(`Building: ${exam.building}, Room: ${exam.room}, Rows: ${exam.rows}, Row Start: ${exam.rowStart}, Row End: ${exam.rowEnd}`)}`,
-        'location=Event Location',
+        `details=${encodeURIComponent(description)}`,
+        `location=${encodeURIComponent(location)}`,
       ].join('&');
   
       const fullURL = `${googleCalendarURL}&${calendarContent}`;
+      
+      // Log for debugging
+      console.log('Google Calendar URL:', fullURL);
   
       window.open(fullURL, '_blank');
     } catch (error) {
       console.error('Error exporting Google Calendar:', error);
+      alert("There was an error exporting to Google Calendar. Please try again.");
     }
   };
 
@@ -145,8 +270,8 @@ const Calendar = () => {
                     {!isMobileView && (
                     <>
                       <td>{exam.exam_type}</td>
-                      <td>{exam.exam_start_time}</td>
-                      <td>{exam.exam_end_time}</td>
+                      <td>{formatDisplayDateTime(exam.exam_start_time)}</td>
+                      <td>{formatDisplayDateTime(exam.exam_end_time)}</td>
                       <td>{exam.building}</td>
                       <td>{exam.room}</td>
                       <td>{exam.rows}</td>
@@ -168,6 +293,15 @@ const Calendar = () => {
                           <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path>
                         </svg>
                       </button>
+                      <button 
+                        className="notification-btn"
+                        onClick={() => {
+                          setSelectedExamForNotification(exam);
+                          setShowNotificationSettings(true);
+                        }}
+                      >
+                        <FontAwesomeIcon icon={faBell} />
+                      </button>
                       <br />
                       <br />
                     </td>
@@ -183,8 +317,21 @@ const Calendar = () => {
               <span className="button__icon"><svg class="svg" data-name="Layer 2" id="bdd05811-e15d-428c-bb53-8661459f9307" viewBox="0 0 35 35" xmlns="http://www.w3.org/2000/svg"><path d="M17.5,22.131a1.249,1.249,0,0,1-1.25-1.25V2.187a1.25,1.25,0,0,1,2.5,0V20.881A1.25,1.25,0,0,1,17.5,22.131Z"></path><path d="M17.5,22.693a3.189,3.189,0,0,1-2.262-.936L8.487,15.006a1.249,1.249,0,0,1,1.767-1.767l6.751,6.751a.7.7,0,0,0,.99,0l6.751-6.751a1.25,1.25,0,0,1,1.768,1.767l-6.752,6.751A3.191,3.191,0,0,1,17.5,22.693Z"></path><path d="M31.436,34.063H3.564A3.318,3.318,0,0,1,.25,30.749V22.011a1.25,1.25,0,0,1,2.5,0v8.738a.815.815,0,0,0,.814.814H31.436a.815.815,0,0,0,.814-.814V22.011a1.25,1.25,0,1,1,2.5,0v8.738A3.318,3.318,0,0,1,31.436,34.063Z"></path></svg></span>
       </button>
     </div>
+    
+    {/* Notification Settings Modal */}
+    {showNotificationSettings && selectedExamForNotification && (
+      <div className="notification-settings-overlay">
+        <NotificationSettings 
+          exam={selectedExamForNotification} 
+          onClose={() => {
+            setShowNotificationSettings(false);
+            setSelectedExamForNotification(null);
+          }}
+        />
+      </div>
+    )}
     </>
   );
-}  
+}
 
 export default Calendar;

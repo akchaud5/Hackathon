@@ -1,0 +1,29 @@
+This is your newly added notification system! Here's what's available:
+
+1. Navigation:
+   - Click the bell icon (🔔) in the sidebar to access the Notification Center
+
+2. Features:
+   - Create custom notifications for any exam in your calendar
+   - Set specific date and time for the first notification
+   - Configure recurring intervals (5min, 15min, 30min, 1hr, 2hr, daily)
+   - Add personalized reminder messages
+   - Enable/disable notifications
+   - Edit or delete notifications
+
+3. How it works:
+   - The system uses browser notifications to alert you
+   - Notifications work even when you're on other tabs (as long as browser is open)
+   - Recurring notifications will stop once the exam time has passed
+
+4. To get started:
+   - First add exams to your calendar from the search page
+   - Then visit the Notification Center and click "Create New Notification"
+   - Select an exam, set your notification preferences, and save
+   
+5. Permissions:
+   - You'll need to allow browser notifications when prompted
+   - This is a local system - notifications are stored in your browser
+
+The notification system is completely independent from the calendar display,
+but works with your calendar data to provide timely exam reminders.

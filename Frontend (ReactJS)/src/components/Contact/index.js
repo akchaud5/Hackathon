@@ -1,6 +1,6 @@
 import "./index.scss"
+import React, { useEffect, useRef, useState } from "react"
 import AnimatedLetters from "../AnimatedLetters" 
-import { useEffect, useRef, useState } from "react"
 import emailjs from "@emailjs/browser"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons"
@@ -24,6 +24,7 @@ const Contact = () => {
       const sendEmail = (e) => {
         e.preventDefault() 
 
+        // Note: You will need to update these values with your own EmailJS service, template, and user ID
         emailjs
             .sendForm(
                 'service_lj8o2ab', 
@@ -59,13 +60,13 @@ const Contact = () => {
                                     <br/>I value open communication and welcome any inquiries, feedback, or collaboration opportunities. Please don't hesitate to get in touch with me by filling out the contact form, especially if you find any errors!
                                     <br/>
                                     <br/>
-                                    <a target = "_blank" rel = "noreferrer" href = "https://www.linkedin.com/in/erik-cupsa/">
+                                    <a target = "_blank" rel = "noreferrer" href = "https://www.linkedin.com/in/ayush-chaudhary-b28ba5326/">
                                         <FontAwesomeIcon icon={faLinkedin}  class = "icon" color = "#4d4d4e" />
                                     </a>
-                                    <a target = "_blank" rel = "noreferrer" href = "mailto:ErikCupsa@gmail.com">
+                                    <a target = "_blank" rel = "noreferrer" href = "mailto:Ayushkumar.chaudhary2003@gmail.com">
                                         <FontAwesomeIcon icon={faEnvelope} class = "icon" color = "#4d4d4e" />
                                     </a>
-                                    <a target = "_blank" rel = "noreferrer" href = "https://github.com/Erik-Cupsa">
+                                    <a target = "_blank" rel = "noreferrer" href = "https://github.com/akchaud5">
                                         <FontAwesomeIcon icon={faGithub} class = "icon" color = "#4d4d4e" />
                                     </a>
                                 </h2>

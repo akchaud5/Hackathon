@@ -1,0 +1,247 @@
+.notificationSettings {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+.notificationHeader {
+  background-color: #8b0000; /* ASU maroon */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notificationHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.notificationHeader h3 svg {
+  margin-right: 10px;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.closeButton:hover {
+  transform: scale(1.2);
+}
+
+.notificationBody {
+  padding: 20px;
+}
+
+.noNotifications {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin: 20px 0;
+}
+
+.notificationList {
+  margin-bottom: 20px;
+}
+
+.notificationItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+  border-left: 4px solid #8b0000;
+}
+
+.inactive {
+  opacity: 0.6;
+  border-left-color: #999 !important;
+}
+
+.notificationDetails {
+  flex: 1;
+}
+
+.notificationTitle {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.notificationTitle svg {
+  margin-right: 5px;
+  color: #8b0000;
+}
+
+.notificationInterval {
+  font-size: 13px;
+  color: #666;
+}
+
+.notificationActions {
+  display: flex;
+  gap: 10px;
+}
+
+.actionButton {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.toggleBtn {
+  font-size: 13px;
+}
+
+.activeBtn {
+  background-color: #e6f7e6;
+  color: #2e7d32;
+}
+
+.inactiveBtn {
+  background-color: #f5f5f5;
+  color: #757575;
+}
+
+.deleteBtn {
+  color: #d32f2f;
+}
+
+.deleteBtn:hover {
+  background-color: #feeaea;
+}
+
+.addNotificationForm {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.addNotificationForm h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.formRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.formRow label {
+  font-weight: 500;
+  flex: 1;
+}
+
+.formRow select {
+  flex: 2;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+}
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.formButton {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cancelBtn {
+  background: none;
+  border: 1px solid #ddd;
+}
+
+.cancelBtn:hover {
+  background-color: #f5f5f5;
+}
+
+.saveBtn {
+  background-color: #8b0000;
+  color: white;
+  border: none;
+}
+
+.saveBtn:hover {
+  background-color: #6b0000;
+}
+
+.addNotificationBtn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px dashed #ddd;
+  border-radius: 6px;
+  color: #8b0000;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 15px;
+}
+
+.addNotificationBtn svg {
+  margin-right: 8px;
+}
+
+.addNotificationBtn:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .notificationSettings {
+    max-width: 100%;
+    border-radius: 0;
+  }
+  
+  .notificationItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .notificationActions {
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+  
+  .formRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .formRow label {
+    margin-bottom: 5px;
+  }
+  
+  .formRow select {
+    width: 100%;
+  }
+}
